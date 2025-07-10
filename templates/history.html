@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat History - TNEA Chatbot</title>
+  <style>
+    body {
+      background-color: #f3f3ff;
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #4b2fb4;
+    }
+
+    .history-container {
+      max-width: 800px;
+      margin: auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .history-entry {
+      border-bottom: 1px solid #ddd;
+      padding: 15px 0;
+    }
+
+    .question {
+      color: #222;
+      font-weight: bold;
+    }
+
+    .response {
+      color: #444;
+      margin-top: 5px;
+      white-space: pre-wrap;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: white;
+      background-color: #6a4cd4;
+      padding: 10px 16px;
+      border-radius: 8px;
+    }
+
+    .back-btn:hover {
+      background-color: #543bb3;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📜 Chat History</h2>
+  <div class="history-container" id="historyBox">
+    <p>Loading chat history...</p>
+  </div>
+
+  <div style="text-align: center;">
+    <a href="/chat" class="back-btn">← Back to Chat</a>
+  </div>
+
+  <script>
+    async function fetchHistory() {
+      const res = await fetch('/history');
+      const data = await res.json();
+      const container = document.getElementById('historyBox');
+      container.innerHTML = '';
+
+      if (data.length === 0) {
+        container.innerHTML = '<p>No history available yet.</p>';
+        return;
+      }
+
+      data.forEach(entry => {
+        const div = document.createElement('div');
+        div.className = 'history-entry';
+
+        const q = document.createElement('div');
+        q.className = 'question';
+        q.textContent = 'Q: ' + entry.question;
+
+        const a = document.createElement('div');
+        a.className = 'response';
+        a.textContent = 'A: ' + entry.response;
+
+        div.appendChild(q);
+        div.appendChild(a);
+        container.appendChild(div);
+      });
+    }
+
+    fetchHistory();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Signup - TNEA Chatbot</title>
+  <style>
+    body {
+      background-color: #f0f4ff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    form {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 300px;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #6a4cd4;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #543bb3;
+    }
+
+    #otpSection {
+      display: none;
+    }
+
+    .message {
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .error {
+      color: red;
+    }
+
+    .success {
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="signupForm">
+    <h2>Signup</h2>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password (min 6 chars)" required>
+    <button type="submit">Send OTP</button>
+
+    <div id="otpSection">
+      <input type="text" id="otp" placeholder="Enter OTP">
+      <button type="button" onclick="verifyOTP()">Verify</button>
+    </div>
+
+    <div id="message" class="message"></div>
+  </form>
+
+  <script>
+    document.getElementById('signupForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      const res = await fetch("/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+
+      const result = await res.json();
+      const msg = document.getElementById("message");
+      msg.textContent = result.message || result.error;
+      msg.className = result.error ? "message error" : "message success";
+
+      if (!result.error) {
+        document.getElementById("otpSection").style.display = "block";
+      }
+    });
+
+    async function verifyOTP() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const otp = document.getElementById("otp").value.trim();
+
+      const res = await fetch("/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, otp })
+      });
+
+      const result = await res.json();
+      const msg = document.getElementById("message");
+      msg.textContent = result.message || result.error;
+      msg.className = result.error ? "message error" : "message success";
+
+      if (result.message === "User created") {
+        setTimeout(() => {
+          window.location.href = "/frontend"; // redirect to chatbot
+        }, 1500);
+      }
+    }
+  </script>
+</body>
+</html>
