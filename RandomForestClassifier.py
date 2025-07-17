@@ -12,7 +12,9 @@ import firebase_admin
 from firebase_admin import auth,credentials
 import json, os
 firebase_json = os.environ.get("FIREBASE_KEY")
-cred = credentials.Certificate(json.loads(firebase_json))
+firebase_dict = json.loads(firebase_json)
+cred = credentials.Certificate(firebase_dict)
+firebase_admin.initialize_app(cred)
 import random, smtplib, requests
 details={}
 em=[' ']
