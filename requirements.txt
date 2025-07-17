@@ -1,0 +1,9 @@
+Flask
+firebase-admin
+gunicorn
+scikit-learn
+joblib
+pandas
+sentence-transformers
+faiss-cpu
+ollama
