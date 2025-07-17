@@ -10,8 +10,9 @@ from ollama import Client
 
 import firebase_admin
 from firebase_admin import auth,credentials
-cred=credentials.Certificate("firebase_key.json")
-firebase_admin.initialize_app(cred)
+import json, os
+firebase_json = os.environ.get("FIREBASE_KEY")
+cred = credentials.Certificate(json.loads(firebase_json))
 import random, smtplib, requests
 details={}
 em=[' ']
